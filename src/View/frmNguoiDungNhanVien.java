@@ -172,7 +172,7 @@ public class frmNguoiDungNhanVien extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Chưa nhập tài khoản hoặc mật khẩu");
             return;
         }
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Lỗi kết nối");
             return;

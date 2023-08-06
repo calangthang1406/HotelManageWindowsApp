@@ -20,7 +20,7 @@ public class Database {
     public static String pass = "";
     public static String url = "jdbc:mysql://localhost:3306/testhotel";
 
-    public static Connection KetNoiCSDL() {
+    public static Connection ConnectDatabase() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -35,7 +35,7 @@ public class Database {
     }
 
     public static void main(String[] args) {
-        Connection cnn = KetNoiCSDL();
+        Connection cnn = ConnectDatabase();
         if (cnn != null) {
             System.out.println("Thành công");
         } else {
