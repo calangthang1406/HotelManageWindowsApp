@@ -212,7 +212,7 @@ public class frmThanhToan extends javax.swing.JFrame {
             return;
         }
 
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;

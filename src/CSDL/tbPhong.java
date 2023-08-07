@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class tbPhong {
     public static int DSPhong(Vector<clssLoaiPhong> dsmn) {
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null)
             return -1;
         String sql = "select * from loaiphong ";
@@ -42,7 +42,7 @@ public class tbPhong {
     }
 
     public static int ThemPhong(int getID, String loaiphong, float dongia) {
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null)
             return -1;
         String sql = "insert into loaiphong(ID, loaiphong, DonGia) "
@@ -61,7 +61,7 @@ public class tbPhong {
     }
 
     public static int SuaPhong(int stt, String tenmonan, float dongia) {
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null)
             return -1;
         String sql = "update loaiphong "
@@ -81,7 +81,7 @@ public class tbPhong {
     }
 
     public static int xoaPhong(int stt) {
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null)
             return -1;
         String sql = "delete from loaiphong "

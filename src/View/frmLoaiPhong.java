@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -46,8 +48,10 @@ public class frmLoaiPhong extends javax.swing.JFrame {
         }
     }
 
+    private boolean isFilterByMonth = false;
+
     public void HienThiDSThongKe() {
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;
@@ -77,9 +81,65 @@ public class frmLoaiPhong extends javax.swing.JFrame {
 
                 dtm.addRow(new Object[] { Integer.toString(getID), loaiPhong, Float.toString(donGia),
                         Integer.toString(soGio),
-                        Float.toString(thanhTien), hoaDon, ngayNhan, ngayTra, Integer.toString(maHD),
-                        tenKhacHang, ngayLapHD, tinhSoNgayO });
+                        hoaDon, ngayNhan, ngayTra, Integer.toString(maHD),
+                        tenKhacHang, ngayLapHD, Float.toString(thanhTien), tinhSoNgayO });
             }
+
+            if (dem == 0) {
+                JOptionPane.showMessageDialog(this,
+                        "ch\u01B0a c\u00F3 ph\u00F2ng n\u00E0o \u0111\u01B0\u1EE3c thanh to\u00E1n");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmDKPhong.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Loi sql " + ex.getMessage());
+            return;
+        }
+    }
+
+    public void HienThiDSThongKeByThang() {
+        Connection conn = CSDL.Database.ConnectDatabase();
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "Loi ket noi");
+            return;
+        }
+        String sql = "select * from thong_ke";
+
+        try {
+            PreparedStatement stm = conn.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            DefaultTableModel dtm = (DefaultTableModel) this.tbThongKe.getModel();
+            dtm.setNumRows(0);
+            int dem = 0;
+            while (rs.next()) {
+                dem++;
+                int getID = rs.getInt("ID");
+                String loaiPhong = rs.getString("loaiphong");
+                float donGia = rs.getFloat("donGia");
+                int soGio = rs.getInt("soGio");
+                String hoaDon = rs.getString("hoaDon");
+                String ngayNhan = rs.getString("ngayNhan");
+                String ngayTra = rs.getString("ngayTra");
+                int maHD = rs.getInt("maHoaDon");
+                String tenKhacHang = rs.getString("tenKhachHang");
+                String ngayLapHD = rs.getString("ngayLapHoaDon");
+                float thanhTien = rs.getFloat("thanhtien");
+                int tinhSoNgayO = rs.getInt("soNgayO");
+
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate setThang = LocalDate.parse(ngayLapHD, dateTimeFormatter);
+
+                int getThang = setThang.getMonthValue();
+                String getMonthFromUser = txtSearch.getText();
+                int UserMonthInt = Integer.parseInt(getMonthFromUser);
+
+                if (getThang == UserMonthInt) {
+                    dtm.addRow(new Object[] { Integer.toString(getID), loaiPhong, Float.toString(donGia),
+                            Integer.toString(soGio),
+                            hoaDon, ngayNhan, ngayTra, Integer.toString(maHD),
+                            tenKhacHang, ngayLapHD, Float.toString(thanhTien), tinhSoNgayO });
+                }
+            }
+
             if (dem == 0) {
                 JOptionPane.showMessageDialog(this,
                         "ch\u01B0a c\u00F3 ph\u00F2ng n\u00E0o \u0111\u01B0\u1EE3c thanh to\u00E1n");
@@ -120,7 +180,7 @@ public class frmLoaiPhong extends javax.swing.JFrame {
         tbThongKe = new javax.swing.JTable();
         btnTongtien = new javax.swing.JButton();
         btnLamMoiDS = new javax.swing.JButton();
-        txtTongTien = new javax.swing.JTextField();
+        txtSearch = new javax.swing.JTextField();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -231,7 +291,7 @@ public class frmLoaiPhong extends javax.swing.JFrame {
                 }));
         jScrollPane3.setViewportView(tbThongKe);
 
-        btnTongtien.setText("Tổng tiền");
+        btnTongtien.setText("T\u00EDnh trung b\u00ECnh");
         btnTongtien.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTongtienActionPerformed(evt);
@@ -245,8 +305,6 @@ public class frmLoaiPhong extends javax.swing.JFrame {
             }
         });
 
-        txtTongTien.setEditable(false);
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -259,7 +317,7 @@ public class frmLoaiPhong extends javax.swing.JFrame {
                                         .addGroup(jPanel3Layout.createSequentialGroup()
                                                 .addComponent(btnTongtien)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(txtTongTien, javax.swing.GroupLayout.DEFAULT_SIZE, 958,
+                                                .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 958,
                                                         Short.MAX_VALUE)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(btnLamMoiDS))
@@ -276,7 +334,7 @@ public class frmLoaiPhong extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnTongtien)
-                                        .addComponent(txtTongTien, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE,
                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(btnLamMoiDS))
@@ -385,6 +443,8 @@ public class frmLoaiPhong extends javax.swing.JFrame {
 
     private void btnTongtienActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnTongtienActionPerformed
 
+        HienThiDSThongKeByThang();
+
         DefaultTableModel dtm = (DefaultTableModel) this.tbThongKe.getModel();
         int row = dtm.getRowCount();
         float tongtien = 0f;
@@ -393,12 +453,26 @@ public class frmLoaiPhong extends javax.swing.JFrame {
             float xx = Float.parseFloat(x);
             tongtien += xx;
         }
-        this.txtTongTien.setText(Float.toString(tongtien));
+        float tb = tongtien / row;
+        String tbThangTitle = txtSearch.getText();
+        String MesTitle = "Trung bình tháng " + tbThangTitle;
+        String MessBody = Float.toString(tb);
+        JOptionPane.showMessageDialog(this, MessBody, MesTitle, JOptionPane.INFORMATION_MESSAGE);
+
+        int hoi = JOptionPane.showConfirmDialog(this,
+                "C\u00F3 mu\u1ED1n hi\u1EC3n th\u1ECB t\u1EA5t c\u1EA3 ho\u00E1 \u0111\u01A1n ??", "Thông báo !!!",
+                JOptionPane.YES_NO_OPTION);
+        if (hoi == JOptionPane.YES_OPTION) {
+            HienThiDSThongKe(); // Thực hiện hàm khi chọn "Yes"
+        } else if (hoi == JOptionPane.NO_OPTION) {
+            HienThiDSThongKeByThang();
+        }
+
     }// GEN-LAST:event_btnTongtienActionPerformed
 
     private void btnLamMoiDSActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLamMoiDSActionPerformed
 
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;
@@ -478,6 +552,7 @@ public class frmLoaiPhong extends javax.swing.JFrame {
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnTongtien;
     private javax.swing.JButton btnXoa;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu3;
@@ -491,6 +566,6 @@ public class frmLoaiPhong extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable tbThongKe;
     private javax.swing.JTable tblPhong;
-    private javax.swing.JTextField txtTongTien;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

@@ -19,6 +19,8 @@ import java.util.Random;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import Model.HotelModel;
+
 /**
  *
  * @author ADMIN
@@ -60,7 +62,7 @@ public class frmDKPhong extends javax.swing.JFrame {
     }
 
     public void HienThiDSHoaDon() {
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;
@@ -246,7 +248,7 @@ public class frmDKPhong extends javax.swing.JFrame {
         btnThemHoaDon.setText("Thêm vào hóa đơn");
         btnThemHoaDon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThemHoaDonActionPerformed(evt);
+                addBill(evt);
             }
         });
 
@@ -762,7 +764,7 @@ public class frmDKPhong extends javax.swing.JFrame {
         return randomNumber;
     }
 
-    private void btnThemHoaDonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void addBill(java.awt.event.ActionEvent evt) {
         DefaultTableModel dtm = (DefaultTableModel) this.tblHoaDon.getModel();
         int setID = generateRandomIdHoaDon();
         String loaiPhong = this.txtLoaiPhong.getText();
@@ -790,7 +792,7 @@ public class frmDKPhong extends javax.swing.JFrame {
             return;
         }
 
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;
@@ -898,7 +900,7 @@ public class frmDKPhong extends javax.swing.JFrame {
 
             Integer calculation = (Integer) this.tblHoaDon.getValueAt(i, 11);
 
-            Connection conn = CSDL.Database.KetNoiCSDL();
+            Connection conn = CSDL.Database.ConnectDatabase();
             if (conn == null) {
                 JOptionPane.showMessageDialog(this, "Loi ket noi");
                 return;
@@ -962,7 +964,7 @@ public class frmDKPhong extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Chưa chọn hoa don cần xóa");
             return;
         } else {
-            Connection cnn = CSDL.Database.KetNoiCSDL();
+            Connection cnn = CSDL.Database.ConnectDatabase();
             if (cnn == null) {
                 JOptionPane.showMessageDialog(this, "Ket noi that bai !!!");
                 return;
@@ -990,7 +992,7 @@ public class frmDKPhong extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;
@@ -1032,7 +1034,7 @@ public class frmDKPhong extends javax.swing.JFrame {
 
     private void btnDongActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnDongActionPerformed
         // TODO add your handling code here:
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;
@@ -1066,7 +1068,7 @@ public class frmDKPhong extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        Connection conn = CSDL.Database.KetNoiCSDL();
+        Connection conn = CSDL.Database.ConnectDatabase();
         if (conn == null) {
             JOptionPane.showMessageDialog(this, "Loi ket noi");
             return;
